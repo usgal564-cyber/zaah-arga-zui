@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Монгол Сурах — Үсэг · Тоо · Амьтад</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mongolian:wght@300;400;600;800;900&family=Noto+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS — нэгдсэн систем
+═══════════════════════════════════════════ */
+:root {
+  /* Цвет палитр */
+  --bg:       #16120e;
+  --bg2:      #1f1912;
+  --bg3:      #2a2218;
+  --card:     #251e16;
+  --card2:    #32281c;
+  --border:   rgba(180,150,100,0.14);
+  --border2:  rgba(180,150,100,0.28);
+ 
+  /* Акцент өнгүүд */
+  --gold:     #e8b84b;
+  --gold2:    #f5d278;
+  --terra:    #d4644a;
+  --terra2:   #e07a5f;
+  --sage:     #5ea36b;
+  --sage2:    #7dc48b;
+  --sky:      #5b9bd5;
+  --sky2:     #7db5e8;
+ 
+  /* Текст */
+  --fg:       #f0e8d8;
+  --fg2:      #b8a888;
+  --fg3:      #7a6a52;
+ 
+  /* Хэмжээс */
+  --r:        14px;
+  --r2:       20px;
+  --r3:       28px;
+ 
+  font-family: 'Noto Sans', 'Noto Sans Mongolian', system-ui, sans-serif;
+}
+ 
+* { margin:0; padding:0; box-sizing:border-box; }
+ 
+body {
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+ 
+/* Ambient glow */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 70vw 50vh at 15% 20%, rgba(232,184,75,.055) 0%, transparent 60%),
+    radial-gradient(ellipse 60vw 50vh at 85% 75%, rgba(212,100,74,.045) 0%, transparent 60%),
+    radial-gradient(ellipse 50vw 40vh at 50% 50%, rgba(94,163,107,.03) 0%, transparent 60%);
+}
+ 
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+ 
+/* ═══════════════════════════════════════════
+   GLOBAL NAV — 3 модуль сонгогч
+═══════════════════════════════════════════ */
+.global-nav {
+  position: sticky; top: 0; z-index: 900;
+  background: rgba(22,18,14,.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: center; align-items: center;
+  gap: 6px; padding: 10px 16px;
+}
+ 
+.gn-brand {
+  position: absolute; left: 20px;
+  font-size: .8rem; font-weight: 800;
+  color: var(--gold); letter-spacing: 1px;
+  opacity: .7; display: none;
+}
+ 
+.gnav-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 22px;
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  background: transparent;
+  color: var(--fg2);
+  font-family: inherit;
+  font-size: .88rem; font-weight: 700;
+  cursor: pointer;
+  transition: all .25s ease;
+  position: relative; overflow: hidden;
+}
+.gnav-btn::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg, var(--gold), var(--terra));
+  opacity: 0; transition: opacity .25s;
+}
+.gnav-btn span, .gnav-btn i { position:relative; z-index:1; }
+.gnav-btn:hover { border-color: var(--border2); color: var(--fg); transform: translateY(-1px); }
+.gnav-btn.active {
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(212,100,74,.35);
+}
+.gnav-btn.active::before { opacity: 1; }
+.gnav-btn.active-gold::before { background: linear-gradient(135deg, var(--gold), #e8842b); }
+.gnav-btn.active-terra::before { background: linear-gradient(135deg, var(--terra), #b83a22); }
+.gnav-btn.active-sage::before { background: linear-gradient(135deg, var(--sage), #3a7a4a); }
+ 
+/* ═══════════════════════════════════════════
+   MODULE SECTIONS
+═══════════════════════════════════════════ */
+.module { display: none; position: relative; z-index: 1; }
+.module.active { display: block; animation: modIn .45s cubic-bezier(.22,1,.36,1); }
+@keyframes modIn {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+ 
+.mod-wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px 60px; }
+ 
+/* ═══════════════════════════════════════════
+   SHARED: MODULE HEADER
+═══════════════════════════════════════════ */
+.mod-header {
+  text-align: center;
+  padding: 40px 20px 30px;
+}
+.mod-header h1 {
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold2), var(--terra));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px; margin-bottom: 6px;
+  font-family: 'Noto Sans Mongolian', sans-serif;
+}
+.mod-header p { color: var(--fg2); font-size: .93rem; }
+ 
+/* ═══════════════════════════════════════════
+   SHARED: TAB SWITCHER
+═══════════════════════════════════════════ */
+.tab-row {
+  display: flex; justify-content: center; gap: 10px;
+  margin-bottom: 28px;
+}
+.tab-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 11px 28px;
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  background: var(--card);
+  color: var(--fg2);
+  font-family: inherit; font-size: .9rem; font-weight: 700;
+  cursor: pointer;
+  transition: all .25s ease;
+}
+.tab-btn:hover { border-color: var(--border2); color: var(--fg); transform: translateY(-2px); }
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--terra), #b83a22);
+  border-color: transparent; color: #fff;
+  box-shadow: 0 4px 18px rgba(212,100,74,.35);
+}
+.tab-pane { display: none; }
+.tab-pane.active { display: block; animation: modIn .3s ease; }
+ 
+/* ═══════════════════════════════════════════
+   SHARED: CARD BASE
+═══════════════════════════════════════════ */
+.base-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  transition: all .3s cubic-bezier(.22,1,.36,1);
+}
+.base-card:hover {
+  border-color: rgba(232,184,75,.4);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 36px rgba(0,0,0,.4), 0 0 28px rgba(232,184,75,.08);
+}
+ 
+/* ═══════════════════════════════════════════
+   MODULE 1: ҮСЭГ
+═══════════════════════════════════════════ */
+.letter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 12px;
+  margin-bottom: 30px;
+}
+.letter-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .3s ease;
+  position: relative; overflow: hidden;
+}
+.letter-card::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(232,184,75,.1), transparent);
+  opacity:0; transition:opacity .3s;
+}
+.letter-card:hover::before { opacity:1; }
+.letter-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0,0,0,.3);
+}
+.letter-card:active { transform: scale(.96); }
+.lc-emoji { font-size: 2rem; display:block; margin-bottom:7px; }
+.lc-letter {
+  font-size: 2.4rem; font-weight: 900;
+  color: var(--gold);
+  font-family: 'Noto Sans Mongolian', sans-serif;
+  line-height: 1; margin-bottom: 4px;
+}
+.lc-word { font-size: .78rem; color: var(--fg2); }
+.lc-sound {
+  position:absolute; top:7px; right:8px;
+  font-size:.7rem; color:var(--gold);
+  opacity:0; transition:opacity .3s;
+}
+.letter-card:hover .lc-sound { opacity:1; }
+.letter-card.speaking {
+  border-color: var(--gold);
+  box-shadow: 0 0 22px rgba(232,184,75,.3);
+}
+.letter-card.special { opacity:.5; cursor:default; }
+.letter-card.special:hover { transform:none; border-color:var(--border); box-shadow:none; }
+.letter-card.special .lc-letter { font-size:1.3rem; color:var(--fg3); }
+ 
+/* Quiz section — letters */
+.lquiz-header { text-align:center; margin-bottom:24px; }
+.lquiz-stats { display:flex; justify-content:center; gap:28px; margin-top:12px; }
+.lstat-val { font-size:1.7rem; font-weight:900; }
+.lstat-val.c { color:var(--sage); }
+.lstat-val.w { color:var(--terra); }
+.lstat-val.s { color:var(--gold); }
+.lstat-label { font-size:.73rem; color:var(--fg2); margin-top:2px; }
+ 
+.lquiz-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r3);
+  padding: 36px 28px;
+  max-width: 500px; margin: 0 auto 20px;
+  text-align: center; position:relative; overflow:hidden;
+}
+.lquiz-card::before {
+  content:''; position:absolute; top:0; left:0; right:0;
+  height:3px;
+  background: linear-gradient(90deg, var(--gold), var(--terra), var(--gold2));
+}
+.lquiz-emoji {
+  font-size:4.5rem; display:block; margin-bottom:10px;
+  animation: floatAnim 3s ease-in-out infinite;
+}
+@keyframes floatAnim { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.lquiz-q { font-size:1.05rem; color:var(--fg2); margin-bottom:24px; }
+.lquiz-q strong { color:var(--fg); }
+ 
+.lopts { display:grid; grid-template-columns:1fr 1fr; gap:10px; max-width:400px; margin:0 auto; }
+.lopt-btn {
+  padding:15px; border:1.5px solid var(--border);
+  background:var(--bg2); color:var(--fg);
+  font-family:'Noto Sans Mongolian',inherit; font-size:1.4rem; font-weight:900;
+  border-radius:var(--r); cursor:pointer;
+  transition:all .22s ease; position:relative;
+}
+.lopt-btn:hover:not(:disabled) { border-color:var(--gold); background:var(--card2); transform:scale(1.04); }
+.lopt-btn.correct { border-color:var(--sage); background:rgba(94,163,107,.18); color:var(--sage2); animation:popAnim .4s ease; }
+.lopt-btn.wrong   { border-color:var(--terra); background:rgba(212,100,74,.15); color:var(--terra2); animation:shakeAnim .4s ease; }
+.lopt-btn:disabled { cursor:default; opacity:.7; }
+.lopt-word { display:block; font-size:.68rem; font-weight:400; color:var(--fg2); margin-top:3px; }
+ 
+@keyframes popAnim   { 0%{transform:scale(1)} 50%{transform:scale(1.1)} 100%{transform:scale(1)} }
+@keyframes shakeAnim { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+ 
+.lquiz-actions { text-align:center; margin-top:18px; }
+.next-btn {
+  padding:11px 34px; border:none;
+  background: linear-gradient(135deg, var(--gold), var(--terra));
+  color:#fff; font-family:inherit; font-size:.93rem; font-weight:700;
+  border-radius:50px; cursor:pointer; transition:all .3s ease;
+  display:none; align-items:center; gap:8px;
+}
+.next-btn.show { display:inline-flex; }
+.next-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(232,184,75,.3); }
+ 
+.lprog-wrap { max-width:500px; margin:0 auto 18px; background:var(--bg2); border-radius:8px; height:6px; overflow:hidden; }
+.lprog-bar { height:100%; background:linear-gradient(90deg, var(--gold), var(--terra)); border-radius:8px; transition:width .5s ease; }
+ 
+.lsummary {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:var(--r3); padding:40px;
+  text-align:center; max-width:460px; margin:40px auto;
+}
+.lsummary .big-pct {
+  font-size:3.8rem; font-weight:900;
+  background:linear-gradient(135deg, var(--gold2), var(--terra));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.lsummary h2 { font-size:1.4rem; margin:8px 0 4px; }
+.lsummary p  { color:var(--fg2); margin-bottom:22px; }
+.retry-btn {
+  padding:13px 36px; border:none;
+  background:linear-gradient(135deg, var(--terra), #b83a22);
+  color:#fff; font-family:inherit; font-size:.93rem; font-weight:700;
+  border-radius:50px; cursor:pointer; transition:all .3s ease;
+}
+.retry-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(212,100,74,.4); }
+ 
+/* Floating feedback */
+.global-feedback {
+  position:fixed; top:68px; left:50%;
+  transform:translateX(-50%) translateY(-100px);
+  padding:12px 30px; border-radius:50px;
+  font-weight:700; font-size:1rem;
+  z-index:999; pointer-events:none;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.global-feedback.show { transform:translateX(-50%) translateY(0); }
+.global-feedback.correct { background:rgba(94,163,107,.95); color:#fff; box-shadow:0 4px 18px rgba(94,163,107,.4); }
+.global-feedback.wrong   { background:rgba(212,100,74,.95); color:#fff; box-shadow:0 4px 18px rgba(212,100,74,.4); }
+ 
+/* ═══════════════════════════════════════════
+   MODULE 2: ТОО
+═══════════════════════════════════════════ */
+.ntab-row {
+  display:flex; gap:6px; margin-bottom:24px;
+  overflow-x:auto; padding-bottom:4px;
+}
+.ntab-btn {
+  padding:9px 20px; border-radius:50px; border:1.5px solid var(--border);
+  background:var(--card); color:var(--fg2);
+  font-family:inherit; font-size:.84rem; font-weight:700;
+  cursor:pointer; transition:all .22s; white-space:nowrap;
+}
+.ntab-btn:hover { border-color:var(--border2); color:var(--fg); }
+.ntab-btn.active { background:linear-gradient(135deg,var(--gold),#e8842b); border-color:transparent; color:#fff; }
+ 
+.num-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:12px; max-width:760px; margin:0 auto 30px;
+}
+.num-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r2); padding:18px 10px; text-align:center;
+  cursor:pointer; transition:all .3s cubic-bezier(.22,1,.36,1); position:relative; overflow:hidden;
+}
+.num-card:hover { border-color:var(--gold); transform:translateY(-5px) scale(1.04); box-shadow:0 10px 28px rgba(0,0,0,.35); }
+.num-card:active { transform:scale(.93); }
+.num-card.pop { animation:popAnim .35s cubic-bezier(.34,1.56,.64,1); }
+.nc-digit { font-size:2.6rem; font-weight:900; color:var(--fg); }
+.nc-name  { font-size:.82rem; font-weight:700; color:var(--gold); margin-top:4px; }
+ 
+.dot { width:9px; height:9px; border-radius:50%; display:inline-block; }
+ 
+/* Number line */
+.numline-wrap {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r2); padding:20px 18px;
+  margin:24px auto; max-width:760px;
+}
+.numline-wrap h3 { font-size:.88rem; font-weight:700; color:var(--fg2); margin-bottom:14px; text-align:center; }
+.nl-row { display:flex; align-items:center; gap:8px; }
+.nl-arrow {
+  width:36px; height:36px; border-radius:10px;
+  border:1.5px solid var(--border);
+  background:var(--bg2); color:var(--gold);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .2s; font-size:1rem; flex-shrink:0;
+}
+.nl-arrow:hover { background:var(--gold); color:#fff; transform:scale(1.1); }
+.nl-scroll { flex:1; overflow-x:auto; padding-bottom:4px; }
+.nl-btns { display:flex; gap:4px; min-width:max-content; }
+.nl-btn {
+  min-width:34px; height:34px; border-radius:8px;
+  border:1.5px solid transparent;
+  background:var(--bg2); color:var(--fg2);
+  font-family:inherit; font-size:.8rem; font-weight:800;
+  cursor:pointer; transition:all .18s; flex-shrink:0;
+}
+.nl-btn:hover { background:var(--gold); color:#fff; }
+.nl-btn.active { background:var(--terra); color:#fff; border-color:var(--terra); transform:scale(1.18); box-shadow:0 4px 12px rgba(212,100,74,.4); }
+.nl-display { text-align:center; margin-top:18px; }
+.nl-big { font-size:5.5rem; font-weight:900; color:var(--gold); line-height:1; }
+.nl-name { font-size:1.2rem; font-weight:700; color:var(--fg2); margin-top:6px; }
+ 
+/* Count game */
+.count-area {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r3); padding:28px; text-align:center;
+  max-width:500px; margin:0 auto;
+}
+.count-q { font-size:.88rem; font-weight:700; color:var(--fg2); margin-bottom:10px; }
+.count-icons { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; min-height:100px; align-items:center; margin-bottom:20px; padding:16px; background:var(--bg2); border-radius:16px; }
+.count-icon { font-size:1.8rem; animation:iconBounce .4s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes iconBounce { from{opacity:0;transform:scale(0)} to{opacity:1;transform:scale(1)} }
+.count-btns { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+.count-btn {
+  min-width:44px; height:44px; border-radius:12px;
+  border:2px solid var(--border); background:var(--bg2); color:var(--fg);
+  font-family:inherit; font-size:1.2rem; font-weight:900;
+  cursor:pointer; transition:all .2s;
+}
+.count-btn:hover { border-color:var(--gold); transform:scale(1.1); }
+.count-btn:active { transform:scale(.9); }
+.count-btn.correct-ans { background:var(--sage)!important; color:#fff!important; border-color:var(--sage)!important; }
+.count-btn.wrong-ans   { background:var(--terra)!important; color:#fff!important; border-color:var(--terra)!important; }
+ 
+.count-prog { max-width:500px; margin:0 auto 18px; }
+.count-prog-info { display:flex; justify-content:space-between; font-size:.8rem; font-weight:700; color:var(--fg2); margin-bottom:6px; }
+.count-prog-bar { background:var(--bg2); border-radius:6px; height:7px; overflow:hidden; }
+.count-prog-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--terra)); border-radius:6px; transition:width .5s; }
+ 
+/* Number quiz */
+.nquiz-diff-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; max-width:600px; margin:0 auto 24px; }
+.diff-card {
+  background:var(--card); border:1.5px solid var(--border);
+  border-radius:var(--r2); padding:24px 16px; text-align:center;
+  cursor:pointer; transition:all .3s cubic-bezier(.22,1,.36,1);
+}
+.diff-card:hover { transform:translateY(-7px) scale(1.03); border-color:var(--border2); box-shadow:0 14px 36px rgba(0,0,0,.4); }
+.diff-icon { width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:1.3rem; }
+.diff-title { font-size:1.1rem; font-weight:800; margin-bottom:4px; }
+.diff-sub { font-size:.78rem; color:var(--fg2); font-weight:600; }
+ 
+/* Quiz play */
+.nquiz-play-wrap { max-width:600px; margin:0 auto; }
+.nquiz-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.nquiz-quit { font-size:.82rem; font-weight:700; color:var(--fg2); cursor:pointer; background:none; border:none; font-family:inherit; transition:color .2s; }
+.nquiz-quit:hover { color:var(--terra); }
+.nquiz-timer-disp { font-size:1.3rem; font-weight:900; color:var(--terra); }
+.nquiz-score-disp { font-size:.85rem; font-weight:700; color:var(--gold); }
+.nquiz-prog-bar { width:100%; height:6px; background:var(--bg2); border-radius:4px; overflow:hidden; margin-bottom:20px; }
+.nquiz-prog-fill { height:100%; background:linear-gradient(90deg,var(--terra),var(--gold)); border-radius:4px; transition:width .5s; }
+ 
+.nquiz-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r3); padding:32px 28px;
+  text-align:center; min-height:300px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.nquiz-badge { font-size:.72rem; font-weight:700; padding:4px 12px; border-radius:20px; margin-bottom:16px; }
+.nquiz-text { font-size:1.6rem; font-weight:900; color:var(--fg); margin-bottom:22px; min-height:44px; }
+.nquiz-choices { display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; max-width:340px; }
+.nquiz-choice {
+  padding:14px 10px; border-radius:14px;
+  border:2px solid var(--border); background:var(--bg2); color:var(--fg);
+  font-family:inherit; font-size:1.1rem; font-weight:800;
+  cursor:pointer; transition:all .22s;
+}
+.nquiz-choice:hover:not(.disabled) { border-color:var(--gold); background:var(--card2); transform:scale(1.04); }
+.nquiz-choice.correct-ans { background:rgba(94,163,107,.25)!important; border-color:var(--sage)!important; color:var(--sage2)!important; }
+.nquiz-choice.wrong-ans   { background:rgba(212,100,74,.2)!important;  border-color:var(--terra)!important; color:var(--terra2)!important; }
+.nquiz-choice.disabled    { pointer-events:none; opacity:.55; }
+.nquiz-fb { margin-top:14px; font-size:.9rem; font-weight:700; min-height:28px; }
+ 
+/* Quiz result */
+.nquiz-result { max-width:440px; margin:0 auto; text-align:center; }
+.nresult-icon { font-size:3.5rem; margin-bottom:14px; }
+.nresult-title { font-size:1.8rem; font-weight:900; color:var(--gold); margin-bottom:6px; }
+.nresult-sub   { color:var(--fg2); margin-bottom:24px; }
+.nresult-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r3); padding:24px 28px; margin-bottom:20px;
+}
+.nresult-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; text-align:center; margin-bottom:20px; }
+.nresult-num { font-size:2rem; font-weight:900; }
+.nresult-lbl { font-size:.7rem; color:var(--fg2); font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+.nresult-breakdown { display:flex; flex-direction:column; gap:8px; }
+.nbd-row { display:flex; align-items:center; gap:8px; }
+.nbd-label { font-size:.78rem; font-weight:700; color:var(--fg); width:80px; flex-shrink:0; }
+.nbd-track { flex:1; height:7px; background:var(--bg2); border-radius:4px; overflow:hidden; }
+.nbd-fill  { height:100%; border-radius:4px; transition:width .6s ease; }
+.nbd-pct   { font-size:.72rem; font-weight:700; color:var(--fg2); width:42px; text-align:right; }
+.nresult-btns { display:flex; gap:10px; }
+.nbtn-home {
+  flex:1; padding:13px; border-radius:14px;
+  border:1.5px solid var(--border); background:var(--bg2); color:var(--fg);
+  font-family:inherit; font-size:.9rem; font-weight:700; cursor:pointer; transition:all .22s;
+}
+.nbtn-home:hover { border-color:var(--border2); }
+.nbtn-retry {
+  flex:1; padding:13px; border-radius:14px;
+  border:none; background:var(--terra); color:#fff;
+  font-family:inherit; font-size:.9rem; font-weight:700; cursor:pointer; transition:all .22s;
+}
+.nbtn-retry:hover { background:var(--terra2); }
+ 
+/* Timer ring */
+.timer-ring { transition:stroke-dashoffset 1s linear; }
+ 
+/* ═══════════════════════════════════════════
+   MODULE 3: АМЬТАД
+═══════════════════════════════════════════ */
+.anim-page-dots {
+  display:flex; justify-content:center; gap:10px;
+  margin-bottom:22px;
+}
+.apd-btn {
+  width:42px; height:42px; border-radius:50%;
+  border:1.5px solid var(--border); background:var(--card);
+  color:var(--fg2); font-size:.73rem; font-weight:700;
+  cursor:pointer; transition:all .3s cubic-bezier(.22,1,.36,1);
+  display:flex; align-items:center; justify-content:center; position:relative;
+}
+.apd-btn::before {
+  content:''; position:absolute; inset:0; border-radius:50%;
+  background:linear-gradient(135deg,var(--sage),#2d5e38); transform:scale(0);
+  transition:transform .3s cubic-bezier(.22,1,.36,1);
+}
+.apd-btn span { position:relative; z-index:1; }
+.apd-btn:hover:not(.active) { border-color:var(--border2); transform:scale(1.08); }
+.apd-btn.active { border-color:transparent; color:var(--bg); transform:scale(1.14); box-shadow:0 0 18px rgba(94,163,107,.35); }
+.apd-btn.active::before { transform:scale(1); }
+ 
+.anim-section-label { text-align:center; margin-bottom:20px; }
+.anim-section-label h2 { font-size:1.4rem; font-weight:800; color:var(--fg); }
+.anim-section-label h2::after {
+  content:''; display:block; width:50px; height:2px;
+  background:linear-gradient(90deg,transparent,var(--sage),transparent);
+  margin:8px auto 0; border-radius:1px;
+}
+.anim-section-label p { font-size:.82rem; color:var(--fg2); margin-top:5px; }
+ 
+.anim-page { display:none; }
+.anim-page.active { display:block; animation:modIn .4s ease; }
+ 
+.animals-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:18px;
+}
+ 
+.acard {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r2); overflow:hidden; cursor:pointer;
+  transition:all .35s cubic-bezier(.22,1,.36,1); position:relative;
+}
+.acard:hover { transform:translateY(-7px); border-color:rgba(94,163,107,.45); box-shadow:0 14px 40px rgba(0,0,0,.45); }
+.acard-img-wrap { overflow:hidden; position:relative; height:155px; }
+.acard-img { width:100%; height:100%; object-fit:cover; transition:transform .6s ease; display:block; }
+.acard:hover .acard-img { transform:scale(1.08); }
+.acard-img-wrap::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:55px;
+  background:linear-gradient(transparent, var(--card)); pointer-events:none;
+}
+.acard-rare {
+  position:absolute; top:10px; right:10px;
+  background:rgba(212,100,74,.88); color:#fff;
+  font-size:.62rem; font-weight:700; padding:3px 9px; border-radius:20px;
+  letter-spacing:.5px; text-transform:uppercase;
+}
+.acard-body { padding:14px 18px 10px; }
+.acard-name { font-size:1.05rem; font-weight:800; color:var(--gold); margin-bottom:2px; }
+.acard-alt  { font-size:.73rem; color:var(--fg3); margin-bottom:7px; font-style:italic; }
+.acard-desc { font-size:.83rem; color:var(--fg2); line-height:1.5; }
+.acard-footer { padding:8px 18px 14px; display:flex; gap:6px; flex-wrap:wrap; }
+.acard-tag {
+  font-size:.64rem; padding:3px 9px; border-radius:20px;
+  background:rgba(94,163,107,.14); color:var(--sage2);
+  border:1px solid rgba(94,163,107,.25); font-weight:600;
+}
+.acard-arrow {
+  position:absolute; bottom:12px; right:14px;
+  color:var(--sage); font-size:.72rem; opacity:0;
+  transform:translateX(6px); transition:all .25s;
+}
+.acard:hover .acard-arrow { opacity:1; transform:translateX(0); }
+ 
+/* Anim nav arrows */
+.anim-nav { display:flex; align-items:center; justify-content:center; gap:14px; margin:24px 0 6px; }
+.anav-btn {
+  width:46px; height:46px; border-radius:50%;
+  border:1.5px solid var(--border); background:var(--card); color:var(--fg2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; cursor:pointer; transition:all .25s;
+}
+.anav-btn:hover { border-color:var(--sage); color:var(--sage); background:var(--card2); transform:scale(1.1); }
+.anim-page-ind { font-size:.82rem; font-weight:700; color:var(--fg2); min-width:60px; text-align:center; }
+.anim-page-ind .curr { color:var(--gold); font-size:1.1rem; font-weight:900; }
+ 
+/* Animal modal */
+.amod-overlay {
+  position:fixed; inset:0; z-index:2000;
+  background:rgba(8,6,4,.88); backdrop-filter:blur(14px);
+  display:none; align-items:center; justify-content:center; padding:20px;
+}
+.amod-overlay.show { display:flex; animation:fadeIn .25s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.amod {
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:var(--r3); max-width:540px; width:100%;
+  max-height:88vh; overflow-y:auto; position:relative;
+  animation:modalUp .35s cubic-bezier(.22,1,.36,1);
+}
+@keyframes modalUp { from{transform:translateY(40px) scale(.95);opacity:0} to{transform:none;opacity:1} }
+.amod::-webkit-scrollbar { width:5px; }
+.amod::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+.amod-img { width:100%; height:220px; object-fit:cover; border-radius:var(--r3) var(--r3) 0 0; }
+.amod-body { padding:24px 28px 30px; }
+.amod-name { font-size:1.5rem; font-weight:900; color:var(--gold); margin-bottom:3px; }
+.amod-alt  { font-size:.83rem; color:var(--fg3); margin-bottom:12px; font-style:italic; }
+.amod-desc { font-size:.9rem; color:var(--fg2); line-height:1.68; margin-bottom:18px; }
+.amod-facts { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.amod-fact { background:rgba(94,163,107,.1); border:1px solid rgba(94,163,107,.2); border-radius:12px; padding:11px 14px; }
+.amod-fact-lbl { font-size:.65rem; color:var(--sage2); text-transform:uppercase; letter-spacing:.8px; font-weight:700; margin-bottom:3px; }
+.amod-fact-val { font-size:.88rem; color:var(--fg); font-weight:600; }
+.amod-close {
+  position:absolute; top:14px; right:14px;
+  width:38px; height:38px; border-radius:50%;
+  background:rgba(0,0,0,.5); backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.1); color:#fff;
+  font-size:1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .25s; z-index:10;
+}
+.amod-close:hover { background:var(--terra); transform:rotate(90deg); }
+ 
+/* Animal quiz */
+.aquiz-wrap { max-width:560px; margin:0 auto; }
+.aquiz-score { display:flex; justify-content:center; gap:28px; margin-bottom:20px; }
+.aqscore-num { font-size:1.9rem; font-weight:900; color:var(--gold); }
+.aqscore-lbl { font-size:.7rem; color:var(--fg2); text-transform:uppercase; letter-spacing:.8px; }
+.aqprog { width:100%; height:6px; background:var(--bg2); border-radius:4px; margin-bottom:22px; overflow:hidden; }
+.aqprog-fill { height:100%; background:linear-gradient(90deg,var(--sage),var(--gold)); border-radius:4px; transition:width .4s; }
+.aquiz-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--r3); padding:28px; text-align:center;
+}
+.aquiz-q  { font-size:1.05rem; font-weight:700; color:var(--fg); margin-bottom:6px; }
+.aquiz-hint { font-size:.82rem; color:var(--fg3); margin-bottom:16px; font-style:italic; }
+.aquiz-img {
+  width:180px; height:130px; object-fit:cover;
+  border-radius:14px; margin:0 auto 18px; display:block;
+  border:1.5px solid var(--border);
+}
+.aquiz-opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.aquiz-opt {
+  padding:13px 14px; border-radius:12px;
+  border:1.5px solid var(--border); background:var(--bg2); color:var(--fg);
+  font-family:inherit; font-size:.9rem; font-weight:700;
+  cursor:pointer; transition:all .22s;
+}
+.aquiz-opt:hover:not(.disabled) { border-color:var(--gold); background:var(--card2); transform:translateY(-2px); }
+.aquiz-opt.correct { border-color:var(--sage); background:rgba(94,163,107,.22); color:var(--sage2); animation:popAnim .4s ease; }
+.aquiz-opt.wrong   { border-color:var(--terra); background:rgba(212,100,74,.18); color:var(--terra2); animation:shakeAnim .4s ease; }
+.aquiz-opt.disabled { pointer-events:none; opacity:.55; }
+.aquiz-fb { min-height:28px; font-size:.88rem; font-weight:700; }
+.aquiz-fb.cor { color:var(--sage2); }
+.aquiz-fb.wrn { color:var(--terra2); }
+.aquiz-next {
+  padding:11px 32px; border:none; border-radius:50px;
+  background:linear-gradient(135deg,var(--sage),#2d5e38); color:#fff;
+  font-family:inherit; font-size:.9rem; font-weight:700;
+  cursor:pointer; transition:all .25s; display:none;
+}
+.aquiz-next.show { display:inline-block; animation:modIn .25s ease; }
+.aquiz-next:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(94,163,107,.3); }
+ 
+.aquiz-result { display:none; }
+.aquiz-result.show { display:block; }
+.aqresult-icon { font-size:3rem; margin-bottom:10px; }
+.aqresult-title { font-size:1.5rem; font-weight:900; color:var(--gold); margin-bottom:6px; }
+.aqresult-sub   { color:var(--fg2); margin-bottom:20px; }
+.aqrestart {
+  padding:12px 36px; border-radius:50px;
+  border:1.5px solid var(--sage); background:transparent; color:var(--sage);
+  font-family:inherit; font-size:.9rem; font-weight:700;
+  cursor:pointer; transition:all .25s;
+}
+.aqrestart:hover { background:var(--sage); color:#fff; }
+ 
+/* Confetti */
+#confetti { position:fixed; inset:0; pointer-events:none; z-index:9999; }
+@keyframes confettiFly {
+  0% { transform:translate(0,0) rotate(0deg) scale(1); opacity:1; }
+  100% { transform:translate(var(--tx),var(--ty)) rotate(var(--rot)) scale(.3); opacity:0; }
+}
+ 
+/* Toast */
+.toast {
+  position:fixed; bottom:28px; left:50%;
+  transform:translateX(-50%) translateY(100px);
+  background:var(--card2); border:1px solid var(--gold);
+  color:var(--fg); padding:11px 26px; border-radius:12px;
+  font-size:.85rem; font-weight:600; z-index:3000;
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 8px 28px rgba(0,0,0,.45); pointer-events:none;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+ 
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:640px) {
+  .letter-grid { grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:8px; }
+  .lc-letter { font-size:1.9rem; }
+  .lc-emoji  { font-size:1.7rem; }
+  .lquiz-card { padding:22px 14px; }
+  .lopts { gap:8px; }
+  .lopt-btn { padding:12px; font-size:1.1rem; }
+  .animals-grid { grid-template-columns:1fr; }
+  .aquiz-opts { grid-template-columns:1fr; }
+  .amod-facts { grid-template-columns:1fr; }
+  .nquiz-choices { grid-template-columns:1fr; }
+  .gnav-btn { padding:8px 14px; font-size:.8rem; }
+  .gn-brand { display:none!important; }
+}
+ 
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; } }
+</style>
+</head>
+<body>
+ 
+<!-- ═══════════════════════════════════════════
+     GLOBAL NAV
+═══════════════════════════════════════════ -->
+<nav class="global-nav">
+  <button class="gnav-btn active active-gold" data-mod="letters" onclick="switchModule('letters')">
+    <i class="fas fa-font"></i><span>Үсэг</span>
+  </button>
+  <button class="gnav-btn active-terra" data-mod="numbers" onclick="switchModule('numbers')">
+    <i class="fas fa-calculator"></i><span>Тоо</span>
+  </button>
+  <button class="gnav-btn active-sage" data-mod="animals" onclick="switchModule('animals')">
+    <i class="fas fa-paw"></i><span>Амьтад</span>
+  </button>
+</nav>
+ 
+<div class="global-feedback" id="globalFeedback"></div>
+<div id="confetti"></div>
+<div class="toast" id="toast"></div>
+ 
+<!-- ═══════════════════════════════════════════
+     MODULE 1: ҮСЭГ
+═══════════════════════════════════════════ -->
+<div id="modLetters" class="module active">
+  <div class="mod-wrap">
+    <div class="mod-header">
+      <h1>Монгол Цагаан Толгой</h1>
+      <p>Үсгийг дарж дуудлага сонс · QUIZ-д оролц</p>
+    </div>
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="lTab('learn')"><i class="fas fa-book-open"></i> Суралцах</button>
+      <button class="tab-btn" onclick="lTab('quiz')"><i class="fas fa-gamepad"></i> Quiz</button>
+    </div>
+    <div class="tab-pane active" id="ltabLearn">
+      <div class="letter-grid" id="letterGrid"></div>
+    </div>
+    <div class="tab-pane" id="ltabQuiz">
+      <div id="lquizContent"></div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ═══════════════════════════════════════════
+     MODULE 2: ТОО
+═══════════════════════════════════════════ -->
+<div id="modNumbers" class="module">
+  <div class="mod-wrap">
+    <div class="mod-header">
+      <h1>Тоо Сурах</h1>
+      <p>Тоог дарж монгол нэрийг нь сонс · Quiz шалгах</p>
+    </div>
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="nTab('learn')"><i class="fas fa-graduation-cap"></i> Тоо сурах</button>
+      <button class="tab-btn" onclick="nTab('quiz')"><i class="fas fa-brain"></i> Тооны Quiz</button>
+    </div>
+ 
+    <!-- Learn pane -->
+    <div class="tab-pane active" id="ntabLearn">
+      <div class="ntab-row">
+        <button class="ntab-btn active" onclick="nSubTab(0)">0 — 9</button>
+        <button class="ntab-btn" onclick="nSubTab(1)">10 — 19</button>
+        <button class="ntab-btn" onclick="nSubTab(2)">Аравт</button>
+        <button class="ntab-btn" onclick="nSubTab(3)"><i class="fas fa-gamepad" style="margin-right:5px"></i>Тоолох</button>
+      </div>
+      <div id="nsubtab0" class="tab-pane active">
+        <div style="text-align:center;margin-bottom:16px"><h2 style="font-size:1.5rem;font-weight:900;color:var(--fg)">Суурь Тоо</h2><p style="color:var(--fg2);font-size:.85rem">Тоог дарж монгол нэрийг нь сонс</p></div>
+        <div id="grid0" class="num-grid"></div>
+      </div>
+      <div id="nsubtab1" class="tab-pane">
+        <div style="text-align:center;margin-bottom:16px"><h2 style="font-size:1.5rem;font-weight:900;color:var(--fg)">Арван Тоо</h2><p style="color:var(--fg2);font-size:.85rem">10–19 хүртэлх тоонууд</p></div>
+        <div id="grid1" class="num-grid"></div>
+      </div>
+      <div id="nsubtab2" class="tab-pane">
+        <div style="text-align:center;margin-bottom:16px"><h2 style="font-size:1.5rem;font-weight:900;color:var(--fg)">Аравт Тоо</h2><p style="color:var(--fg2);font-size:.85rem">20, 30 … 100 хүртэл</p></div>
+        <div id="grid2" class="num-grid"></div>
+      </div>
+      <div id="nsubtab3" class="tab-pane">
+        <div style="text-align:center;margin-bottom:16px"><h2 style="font-size:1.5rem;font-weight:900;color:var(--fg)">Тоолох Тоглоом</h2><p style="color:var(--fg2);font-size:.85rem">Хэдэн байна?</p></div>
+        <div class="count-prog">
+          <div class="count-prog-info"><span>Үр дүн</span><span id="countScore">0 / 0</span></div>
+          <div class="count-prog-bar"><div class="count-prog-fill" id="countBar" style="width:0%"></div></div>
+        </div>
+        <div class="count-area">
+          <div class="count-q" id="countQ">Хэдэн байна?</div>
+          <div class="count-icons" id="countIcons"></div>
+          <div class="count-btns" id="countBtns"></div>
+        </div>
+      </div>
+ 
+      <!-- Number line -->
+      <div class="numline-wrap">
+        <h3><i class="fas fa-ruler-horizontal" style="margin-right:6px;color:var(--gold)"></i>Тооны Зураас</h3>
+        <div class="nl-row">
+          <button class="nl-arrow" onclick="moveNL(-1)"><i class="fas fa-minus"></i></button>
+          <div class="nl-scroll" id="nlScroll">
+            <div class="nl-btns" id="nlBtns"></div>
+          </div>
+          <button class="nl-arrow" onclick="moveNL(1)"><i class="fas fa-plus"></i></button>
+        </div>
+        <div class="nl-display">
+          <div class="nl-big" id="nlBig">0</div>
+          <div class="nl-name" id="nlName">Тэг</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Quiz pane -->
+    <div class="tab-pane" id="ntabQuiz">
+      <!-- Start screen -->
+      <div id="nqStart">
+        <div style="text-align:center;margin-bottom:30px">
+          <div style="width:72px;height:72px;border-radius:20px;background:var(--terra);margin:0 auto 18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(212,100,74,.4)"><i class="fas fa-brain" style="color:#fff;font-size:1.8rem"></i></div>
+          <h1 style="font-size:1.8rem;font-weight:900;color:var(--fg);margin-bottom:8px">Тооны Quiz</h1>
+          <p style="color:var(--fg2);font-size:.9rem">Асуулт бүрд 15 сек · 4 хариулт · 15 асуулт</p>
+        </div>
+        <div class="nquiz-diff-grid">
+          <div class="diff-card" onclick="startNQ(10)">
+            <div class="diff-icon" style="background:rgba(94,163,107,.15)"><i class="fas fa-seedling" style="color:var(--sage)"></i></div>
+            <div class="diff-title" style="color:var(--sage2)">Амар</div>
+            <div class="diff-sub">Тоо: 0 — 10</div>
+          </div>
+          <div class="diff-card" onclick="startNQ(50)">
+            <div class="diff-icon" style="background:rgba(232,184,75,.15)"><i class="fas fa-fire" style="color:var(--gold)"></i></div>
+            <div class="diff-title" style="color:var(--gold)">Дунд</div>
+            <div class="diff-sub">Тоо: 0 — 50</div>
+          </div>
+          <div class="diff-card" onclick="startNQ(100)">
+            <div class="diff-icon" style="background:rgba(212,100,74,.15)"><i class="fas fa-bolt" style="color:var(--terra)"></i></div>
+            <div class="diff-title" style="color:var(--terra2)">Хэцүү</div>
+            <div class="diff-sub">Тоо: 0 — 100</div>
+          </div>
+        </div>
+      </div>
+      <!-- Play screen -->
+      <div id="nqPlay" style="display:none">
+        <div class="nquiz-play-wrap">
+          <div class="nquiz-top">
+            <button class="nquiz-quit" onclick="nqQuit()"><i class="fas fa-times" style="margin-right:5px"></i>Гарах</button>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="nquiz-timer-disp" id="nqTimerDisp">15</span>
+              <svg width="30" height="30" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="var(--bg2)" stroke-width="3"/><circle id="nqTimerRing" cx="18" cy="18" r="15" fill="none" stroke="var(--terra)" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="0" stroke-linecap="round" class="timer-ring" style="transform:rotate(-90deg);transform-origin:18px 18px"/></svg>
+            </div>
+            <span class="nquiz-score-disp" id="nqScoreDisp">0 / 15</span>
+          </div>
+          <div class="nquiz-prog-bar"><div class="nquiz-prog-fill" id="nqProgFill" style="width:0%"></div></div>
+          <div class="nquiz-card">
+            <div class="nquiz-badge" id="nqBadge"></div>
+            <div class="nquiz-text" id="nqText"></div>
+            <div class="nquiz-choices" id="nqChoices"></div>
+            <div class="nquiz-fb" id="nqFb"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Result screen -->
+      <div id="nqResult" style="display:none">
+        <div class="nquiz-result">
+          <div class="nresult-icon" id="nresIcon"></div>
+          <div class="nresult-title" id="nresTitle"></div>
+          <div class="nresult-sub" id="nresSub"></div>
+          <div class="nresult-card">
+            <div class="nresult-stats">
+              <div><div class="nresult-num" id="nresStat1" style="color:var(--sage)"></div><div class="nresult-lbl">Зөв</div></div>
+              <div><div class="nresult-num" id="nresStat2" style="color:var(--gold)"></div><div class="nresult-lbl">Хувь</div></div>
+              <div><div class="nresult-num" id="nresStat3" style="color:var(--sky)"></div><div class="nresult-lbl">Секунд</div></div>
+            </div>
+            <div class="nresult-breakdown" id="nresBD"></div>
+          </div>
+          <div class="nresult-btns">
+            <button class="nbtn-home" onclick="nqQuit()"><i class="fas fa-home" style="margin-right:6px"></i>Нүүр</button>
+            <button class="nbtn-retry" id="nqRetryBtn"><i class="fas fa-redo" style="margin-right:6px"></i>Дахин</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ═══════════════════════════════════════════
+     MODULE 3: АМЬТАД
+═══════════════════════════════════════════ -->
+<div id="modAnimals" class="module">
+  <div class="mod-wrap">
+    <div class="mod-header">
+      <h1>Монголын Амьтад</h1>
+      <p>Байгалийн сайхныг нээж нэрийг нь сурцгаая</p>
+    </div>
+ 
+    <div class="anim-page-dots" id="animPageDots"></div>
+    <div class="anim-section-label">
+      <h2 id="animSecTitle">Ойн амьтад</h2>
+      <p id="animSecSub">Модон хөвч, нүүдэлчдийн байгаль</p>
+    </div>
+ 
+    <div id="animPages">
+      <div class="anim-page active" id="apage0"><div class="animals-grid" id="agrid0"></div></div>
+      <div class="anim-page" id="apage1"><div class="animals-grid" id="agrid1"></div></div>
+      <div class="anim-page" id="apage2"><div class="animals-grid" id="agrid2"></div></div>
+      <div class="anim-page" id="apage3"><div class="animals-grid" id="agrid3"></div></div>
+      <div class="anim-page" id="apage4">
+        <div class="aquiz-wrap">
+          <div class="aquiz-score">
+            <div class="text-center"><div class="aqscore-num" id="aqC">0</div><div class="aqscore-lbl">Зөв</div></div>
+            <div class="text-center"><div class="aqscore-num" id="aqW">0</div><div class="aqscore-lbl">Буруу</div></div>
+            <div class="text-center"><div class="aqscore-num" id="aqR">10</div><div class="aqscore-lbl">Үлдсэн</div></div>
+          </div>
+          <div class="aqprog"><div class="aqprog-fill" id="aqProg" style="width:0%"></div></div>
+          <div class="aquiz-card">
+            <div id="aquizBody">
+              <div class="aquiz-q" id="aqText">Энэ амьтны нэр юу вэ?</div>
+              <div class="aquiz-hint" id="aqHint"></div>
+              <img class="aquiz-img" id="aqImg" src="" alt="">
+              <div class="aquiz-opts" id="aqOpts"></div>
+              <div class="aquiz-fb" id="aqFb"></div>
+              <button class="aquiz-next" id="aqNext">Дараагийн <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="aquiz-result" id="aquizResult">
+              <div class="aqresult-icon" id="aqResIcon"></div>
+              <div class="aqresult-title" id="aqResTitle"></div>
+              <div class="aqresult-sub" id="aqResSub"></div>
+              <button class="aqrestart" id="aqRestart"><i class="fas fa-rotate-right" style="margin-right:7px"></i>Дахин оролдох</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="anim-nav">
+      <button class="anav-btn" id="anavPrev"><i class="fas fa-chevron-left"></i></button>
+      <div class="anim-page-ind"><span class="curr" id="anavCurr">1</span> / 5</div>
+      <button class="anav-btn" id="anavNext"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+</div>
+ 
+<!-- Animal modal -->
+<div class="amod-overlay" id="amodOverlay">
+  <div class="amod">
+    <button class="amod-close" id="amodClose"><i class="fas fa-xmark"></i></button>
+    <img class="amod-img" id="amodImg" src="" alt="">
+    <div class="amod-body">
+      <div class="amod-name" id="amodName"></div>
+      <div class="amod-alt"  id="amodAlt"></div>
+      <div class="amod-desc" id="amodDesc"></div>
+      <div class="amod-facts" id="amodFacts"></div>
+    </div>
+  </div>
+</div>
+ 
+<script>
+/* ═══════════════════════════════════════════
+   AUDIO
+═══════════════════════════════════════════ */
+var AC=null, voices=[];
+function getAC(){ if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)(); if(AC.state==="suspended")AC.resume(); return AC; }
+function loadV(){ if(window.speechSynthesis) voices=speechSynthesis.getVoices(); }
+if(window.speechSynthesis){ speechSynthesis.onvoiceschanged=loadV; loadV(); }
+function speak(text,cb){
+  if(!window.speechSynthesis){ if(cb)cb(); return; }
+  speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(text);
+  u.lang="mn-MN"; u.rate=.75; u.pitch=1.05;
+  var v=voices.find(function(vv){ return vv.lang&&vv.lang.startsWith("mn"); });
+  if(v)u.voice=v;
+  if(cb){ u.onend=cb; u.onerror=cb; }
+  speechSynthesis.speak(u);
+}
+function tone(freq,type,dur,vol){
+  var c=getAC(),o=c.createOscillator(),g=c.createGain();
+  o.type=type; o.frequency.value=freq;
+  g.gain.setValueAtTime(vol||.1,c.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dur);
+  o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+dur);
+}
+function playDing(){ tone(880,"sine",.22,.12); }
+function playBuzz(){ tone(150,"square",.28,.08); }
+function playClick(){ tone(660,"sine",.08,.07); }
+function playTick(){ tone(1000,"sine",.06,.04); }
+function playSuccess(){
+  var notes=[523,659,784,1047];
+  notes.forEach(function(f,i){ setTimeout(function(){ tone(f,"sine",.3,.12); },i*140); });
+}
+function createConfetti(){
+  var el=document.getElementById("confetti");
+  var cols=["#e8b84b","#d4644a","#5ea36b","#5b9bd5","#f5d278","#e07a5f"];
+  for(var i=0;i<56;i++){
+    var p=document.createElement("div");
+    var s=Math.random()*10+5;
+    p.style.cssText="position:fixed;width:"+s+"px;height:"+s+"px;background:"+cols[Math.floor(Math.random()*cols.length)]+";left:50%;top:40%;border-radius:"+(Math.random()>.5?"50%":"3px")+";pointer-events:none;z-index:10000;animation:confettiFly "+(Math.random()*.8+.6)+"s ease-out forwards;--tx:"+((Math.random()-.5)*560)+"px;--ty:"+((Math.random()-.5)*460)+"px;--rot:"+(Math.random()*720)+"deg;animation-delay:"+(Math.random()*.2)+"s";
+    el.appendChild(p);
+  }
+  setTimeout(function(){ el.innerHTML=""; },2000);
+}
+ 
+/* ═══════════════════════════════════════════
+   GLOBAL NAV
+═══════════════════════════════════════════ */
+function switchModule(mod){
+  if(window.speechSynthesis) speechSynthesis.cancel();
+  clearInterval(nqTimer);
+  ["letters","numbers","animals"].forEach(function(m){
+    document.getElementById("mod"+m.charAt(0).toUpperCase()+m.slice(1)).classList.toggle("active", m===mod);
+  });
+  document.querySelectorAll(".gnav-btn").forEach(function(b){
+    b.classList.toggle("active", b.dataset.mod===mod);
+  });
+  if(mod==="animals") { buildAnimPageDots(); animGoTo(currentAnimPage); }
+  if(mod==="numbers" && currentNSubTab===3) startCountRound();
+}
+ 
+/* ═══════════════════════════════════════════
+   SHARED: FEEDBACK
+═══════════════════════════════════════════ */
+function showFeedback(text, ok){
+  var el=document.getElementById("globalFeedback");
+  el.textContent=text;
+  el.className="global-feedback "+(ok?"correct":"wrong");
+  requestAnimationFrame(function(){ el.classList.add("show"); });
+  setTimeout(function(){ el.classList.remove("show"); },2000);
+}
+function showToast(msg){
+  var t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  setTimeout(function(){ t.classList.remove("show"); },2600);
+}
+ 
+/* ═══════════════════════════════════════════
+   MODULE 1: ҮСЭГ — DATA
+═══════════════════════════════════════════ */
+var letters=[
+  {letter:'А',word:'Аав',emoji:'👨',speak:'А. Аав.'},
+  {letter:'Б',word:'Баавгай',emoji:'🐻',speak:'Б. Баавгай.'},
+  {letter:'В',word:'Ваар',emoji:'🧱',speak:'В. Ваар.'},
+  {letter:'Г',word:'Гэр',emoji:'⛺',speak:'Г. Гэр.'},
+  {letter:'Д',word:'Дэгдээхэй',emoji:'🐸',speak:'Д. Дэгдээхэй.'},
+  {letter:'Е',word:'Ертөнц',emoji:'🌍',speak:'Е. Ертөнц.'},
+  {letter:'Ё',word:'Ёолко',emoji:'🎄',speak:'Ё. Ёолко.'},
+  {letter:'Ж',word:'Жимс',emoji:'🍎',speak:'Ж. Жимс.'},
+  {letter:'З',word:'Заан',emoji:'🐘',speak:'З. Заан.'},
+  {letter:'И',word:'Ирвэс',emoji:'🐆',speak:'И. Ирвэс.'},
+  {letter:'Й',word:'Оосорй',emoji:'🚫',special:true,desc:'Үгийн дунд/адагт'},
+  {letter:'К',word:'Кино',emoji:'🎬',speak:'К. Кино.'},
+  {letter:'Л',word:'Луу',emoji:'🐉',speak:'Л. Луу.'},
+  {letter:'М',word:'Морь',emoji:'🐴',speak:'М. Морь.'},
+  {letter:'Н',word:'Нохой',emoji:'🐕',speak:'Н. Нохой.'},
+  {letter:'О',word:'Одод',emoji:'⭐',speak:'О. Одод.'},
+  {letter:'Ө',word:'Өвөө',emoji:'👴',speak:'Ө. Өвөө.'},
+  {letter:'П',word:'Пүүз',emoji:'👟',speak:'П. Пүүз.'},
+  {letter:'Р',word:'Робот',emoji:'🤖',speak:'Р. Робот.'},
+  {letter:'С',word:'Сар',emoji:'🌙',speak:'С. Сар.'},
+  {letter:'Т',word:'Тэмээ',emoji:'🐫',speak:'Т. Тэмээ.'},
+  {letter:'У',word:'Ус',emoji:'💧',speak:'У. Ус.'},
+  {letter:'Ү',word:'Үүл',emoji:'☁️',speak:'Ү. Үүл.'},
+  {letter:'Ф',word:'Фламинго',emoji:'🦩',speak:'Ф. Фламинго.'},
+  {letter:'Х',word:'Хэрэм',emoji:'🏰',speak:'Х. Хэрэм.'},
+  {letter:'Ц',word:'Цэцэг',emoji:'🌸',speak:'Ц. Цэцэг.'},
+  {letter:'Ч',word:'Чихэр',emoji:'🍬',speak:'Ч. Чихэр.'},
+  {letter:'Ш',word:'Шоргоолж',emoji:'🐜',speak:'Ш. Шоргоолж.'},
+  {letter:'Щ',word:'Щи',emoji:'🍲',special:true,desc:'Зээл үгийн "щ"'},
+  {letter:'Ъ',word:'Хатуугийн тэмдэг',emoji:'🔹',special:true,desc:'Жишээ: Тонъёж'},
+  {letter:'Ы',word:'Эр үгийн "ы"',emoji:'🔹',special:true,desc:'Жишээ: Ахын'},
+  {letter:'Ь',word:'Зөөлний тэмдэг',emoji:'🔹',special:true,desc:'Жишээ: Баярлалаа'},
+  {letter:'Э',word:'Ээж',emoji:'👩',speak:'Э. Ээж.'},
+  {letter:'Ю',word:'Юм',emoji:'📦',speak:'Ю. Юм.'},
+  {letter:'Я',word:'Ямаа',emoji:'🐐',speak:'Я. Ямаа.'},
+];
+var quizLetters=letters.filter(function(l){ return !l.special; });
+ 
+function renderLetters(){
+  var g=document.getElementById("letterGrid"); g.innerHTML="";
+  letters.forEach(function(item,idx){
+    var c=document.createElement("div");
+    c.className="letter-card"+(item.special?" special":"");
+    c.style.cssText="animation:modIn .4s ease "+( idx*25)+"ms both";
+    c.innerHTML='<i class="fas fa-volume-up lc-sound"></i><span class="lc-emoji">'+item.emoji+'</span><div class="lc-letter">'+item.letter+'</div><div class="lc-word">'+(item.special?item.desc:item.word)+'</div>';
+    if(!item.special){
+      c.addEventListener("click",function(){
+        c.classList.add("speaking");
+        speak(item.speak,function(){ c.classList.remove("speaking"); });
+      });
+    }
+    g.appendChild(c);
+  });
+}
+ 
+/* Letter Quiz */
+var lqs={ started:false, questions:[], cur:0, score:0, wrong:0, streak:0, maxStreak:0, total:10, answered:false };
+function shuffle(arr){ var a=[...arr]; for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+ 
+function lTab(t){
+  document.querySelectorAll("#modLetters .tab-btn").forEach(function(b,i){ b.classList.toggle("active",(t==="learn"&&i===0)||(t==="quiz"&&i===1)); });
+  document.getElementById("ltabLearn").classList.toggle("active",t==="learn");
+  document.getElementById("ltabQuiz").classList.toggle("active",t==="quiz");
+  if(t==="quiz"&&!lqs.started) startLQ();
+}
+function startLQ(){
+  lqs.started=true; lqs.cur=0; lqs.score=0; lqs.wrong=0; lqs.streak=0; lqs.maxStreak=0; lqs.answered=false;
+  var sh=shuffle(quizLetters);
+  lqs.questions=sh.slice(0,Math.min(lqs.total,sh.length));
+  lqs.total=lqs.questions.length;
+  renderLQ();
+}
+function renderLQ(){
+  var con=document.getElementById("lquizContent");
+  if(lqs.cur>=lqs.total){ renderLSummary(con); return; }
+  var q=lqs.questions[lqs.cur];
+  var prog=(lqs.cur/lqs.total)*100;
+  var others=shuffle(quizLetters.filter(function(l){ return l.letter!==q.letter; })).slice(0,3);
+  var opts=shuffle([q,...others]);
+  con.innerHTML='<div class="lquiz-header"><div style="color:var(--fg2);font-size:.85rem">Асуулт '+(lqs.cur+1)+' / '+lqs.total+'</div><div class="lquiz-stats"><div><div class="lstat-val c" id="lsC">'+lqs.score+'</div><div class="lstat-label">Зөв</div></div><div><div class="lstat-val w" id="lsW">'+lqs.wrong+'</div><div class="lstat-label">Буруу</div></div><div><div class="lstat-val s" id="lsS">'+lqs.streak+'</div><div class="lstat-label">Цуврал</div></div></div></div><div class="lprog-wrap"><div class="lprog-bar" style="width:'+prog+'%"></div></div><div class="lquiz-card"><span class="lquiz-emoji">'+q.emoji+'</span><div class="lquiz-q">Энэ зурагт зурсан <strong>"'+q.word+'"</strong> гэдэг үг <strong>ямар үсэг</strong>ээр эхэлдэг вэ?</div><div class="lopts" id="lopts">'+opts.map(function(o){ return '<button class="lopt-btn" data-l="'+o.letter+'" onclick="selLA(this,\''+o.letter+'\',\''+q.letter+'\',\''+q.speak.replace(/'/g,"\\'")+'\'">'+o.letter+'<span class="lopt-word">'+o.word+'</span></button>'; }).join("")+'</div></div><div class="lquiz-actions"><button class="next-btn" id="lnext" onclick="nextLQ()">Дараагийн <i class="fas fa-arrow-right"></i></button></div>';
+  lqs.answered=false;
+}
+function selLA(btn,sel,cor,sp){
+  if(lqs.answered)return;
+  lqs.answered=true;
+  document.querySelectorAll(".lopt-btn").forEach(function(b){ b.disabled=true; });
+  if(sel===cor){
+    btn.classList.add("correct"); lqs.score++; lqs.streak++;
+    if(lqs.streak>lqs.maxStreak) lqs.maxStreak=lqs.streak;
+    showFeedback("Зөв! ✓",true); playDing(); speak(sp);
+  } else {
+    btn.classList.add("wrong"); lqs.wrong++; lqs.streak=0;
+    document.querySelectorAll(".lopt-btn").forEach(function(b){ if(b.dataset.l===cor)b.classList.add("correct"); });
+    showFeedback("Буруу! Зөв: "+cor,false); playBuzz(); speak(sp);
+  }
+  document.getElementById("lsC").textContent=lqs.score;
+  document.getElementById("lsW").textContent=lqs.wrong;
+  document.getElementById("lsS").textContent=lqs.streak;
+  document.getElementById("lnext").classList.add("show");
+}
+function nextLQ(){ lqs.cur++; renderLQ(); }
+function renderLSummary(con){
+  var pct=Math.round((lqs.score/lqs.total)*100);
+  var msg=pct===100?"Маш сайн! Бүх үсгээ мэднэ!":pct>=80?"Гайгүй! Дахин давтаарай!":pct>=50?"Хичээгээрэй, дахин сурая!":"Бүх үсгээ дахин үзэерэй!";
+  con.innerHTML='<div class="lsummary"><div class="big-pct">'+pct+'%</div><h2>Quiz Дууслаа</h2><p>'+msg+'</p><div style="display:flex;justify-content:center;gap:26px;margin-bottom:22px"><div><div class="lstat-val c">'+lqs.score+'</div><div class="lstat-label">Зөв</div></div><div><div class="lstat-val w">'+lqs.wrong+'</div><div class="lstat-label">Буруу</div></div><div><div class="lstat-val s">'+lqs.maxStreak+'</div><div class="lstat-label">Хамгийн их цуврал</div></div></div><button class="retry-btn" onclick="(lqs.started=false,startLQ())"><i class="fas fa-redo"></i> Дахин оролдох</button></div>';
+  if(pct>=70){ createConfetti(); playSuccess(); }
+}
+ 
+/* ═══════════════════════════════════════════
+   MODULE 2: ТОО — DATA
+═══════════════════════════════════════════ */
+var basicN=["Тэг","Нэг","Хоёр","Гурав","Дөрөв","Тав","Зургаа","Долоо","Найм","Ес"];
+var tensN=["","","Хорь","Гуч","Дч","Тавь","Жар","Дал","Ная","Ер"];
+function numName(n){
+  if(n===0)return"Тэг"; if(n<10)return basicN[n];
+  if(n===100)return"Зуу";
+  if(n<20)return"Арван "+basicN[n-10].toLowerCase();
+  var t=Math.floor(n/10),o=n%10;
+  if(o===0)return tensN[t];
+  return tensN[t].toLowerCase()+" "+basicN[o].toLowerCase();
+}
+var numGroups=[
+  [0,1,2,3,4,5,6,7,8,9],
+  [10,11,12,13,14,15,16,17,18,19],
+  [20,30,40,50,60,70,80,90,100]
+];
+var dotColors=["#e8b84b","#d4644a","#5b9bd5","#5ea36b","#e07a5f","#8b6f47","#c75b39","#7b8fb2"];
+var countEmojis=["⭐","❤️","🐟","🌿","🌙","☀️","🔔","💎"];
+var currentNSubTab=0, currentNL=0;
+var cntCorrect=0, cntTotal=0, cntTarget=0, cntLocked=false;
+ 
+function nTab(t){
+  document.querySelectorAll("#modNumbers .tab-btn").forEach(function(b,i){ b.classList.toggle("active",(t==="learn"&&i===0)||(t==="quiz"&&i===1)); });
+  document.getElementById("ntabLearn").classList.toggle("active",t==="learn");
+  document.getElementById("ntabQuiz").classList.toggle("active",t==="quiz");
+  if(t==="learn"&&currentNSubTab===3) startCountRound();
+}
+function nSubTab(n){
+  currentNSubTab=n;
+  document.querySelectorAll(".ntab-btn").forEach(function(b,i){ b.classList.toggle("active",i===n); });
+  [0,1,2,3].forEach(function(i){ document.getElementById("nsubtab"+i).classList.toggle("active",i===n); });
+  if(n===3) startCountRound();
+}
+function createDots(n){
+  if(n===0)return'<div style="color:var(--fg3);font-size:.72rem;margin-top:6px">тэг</div>';
+  var h='<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:3px;margin-top:6px">';
+  for(var i=0;i<Math.min(n,20);i++) h+='<span class="dot" style="background:'+dotColors[i%dotColors.length]+';opacity:.55"></span>';
+  return h+'</div>';
+}
+function renderNumGrid(gridId,nums){
+  var g=document.getElementById(gridId); g.innerHTML="";
+  nums.forEach(function(num){
+    var c=document.createElement("div"); c.className="num-card"; c.id="nc"+num;
+    c.innerHTML='<div class="nc-digit">'+num+'</div><div class="nc-name">'+numName(num)+'</div>'+createDots(num);
+    c.onclick=function(){ onNumClick(num); };
+    g.appendChild(c);
+  });
+}
+function onNumClick(n){
+  playDing();
+  var c=document.getElementById("nc"+n);
+  if(c){ c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop"); }
+  currentNL=n; renderNL();
+  var bn=document.getElementById("nlBig"); bn.textContent=n;
+  document.getElementById("nlName").textContent=numName(n);
+  speak(numName(n));
+}
+function renderNL(){
+  var c=document.getElementById("nlBtns"); c.innerHTML="";
+  for(var i=0;i<=100;i++){
+    (function(n){
+      var b=document.createElement("button"); b.className="nl-btn"+(n===currentNL?" active":""); b.textContent=n;
+      b.onclick=function(){ currentNL=n; playClick(); renderNL(); document.getElementById("nlBig").textContent=n; document.getElementById("nlName").textContent=numName(n); speak(numName(n)); };
+      c.appendChild(b);
+    })(i);
+  }
+  var sc=document.getElementById("nlScroll"), ab=c.querySelector(".active");
+  if(ab){ var lft=ab.offsetLeft-sc.offsetWidth/2+ab.offsetWidth/2; sc.scrollLeft=Math.max(0,lft); }
+}
+function moveNL(d){
+  currentNL=Math.max(0,Math.min(100,currentNL+d));
+  playClick(); renderNL();
+  document.getElementById("nlBig").textContent=currentNL;
+  document.getElementById("nlName").textContent=numName(currentNL);
+}
+ 
+/* Count game */
+function startCountRound(){
+  cntLocked=false; cntTarget=Math.floor(Math.random()*10)+1;
+  var em=countEmojis[Math.floor(Math.random()*countEmojis.length)];
+  var ia=document.getElementById("countIcons"); ia.innerHTML="";
+  for(var i=0;i<cntTarget;i++){
+    var s=document.createElement("span"); s.className="count-icon"; s.style.animationDelay=(i*.05)+"s"; s.textContent=em; ia.appendChild(s);
+  }
+  var ba=document.getElementById("countBtns"); ba.innerHTML="";
+  var ch=[cntTarget];
+  while(ch.length<6){ var r=Math.floor(Math.random()*10)+1; if(ch.indexOf(r)===-1)ch.push(r); }
+  for(var i=ch.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=ch[i];ch[i]=ch[j];ch[j]=t; }
+  ch.forEach(function(v){
+    var b=document.createElement("button"); b.className="count-btn"; b.textContent=v;
+    b.onclick=function(){ handleCount(v,b); }; ba.appendChild(b);
+  });
+}
+function handleCount(v,btn){
+  if(cntLocked)return;
+  if(v===cntTarget){
+    cntLocked=true; cntCorrect++; cntTotal++;
+    playDing(); btn.classList.add("correct-ans"); updCntProg(); speak(numName(v));
+    setTimeout(startCountRound,1200);
+  } else {
+    cntTotal++; playBuzz(); btn.classList.add("wrong-ans");
+    setTimeout(function(){ btn.classList.remove("wrong-ans"); },400); updCntProg();
+  }
+}
+function updCntProg(){
+  document.getElementById("countScore").textContent=cntCorrect+" / "+cntTotal;
+  document.getElementById("countBar").style.width=(cntTotal>0?(cntCorrect/cntTotal*100):0)+"%";
+}
+ 
+/* Number Quiz */
+var nqQs=[],nqIdx=0,nqScore=0,nqMax=15,nqDiff=10,nqLocked=false,nqTimer=null,nqTimeLeft=15,nqStartT=0,nqLastDiff=10;
+var nqTypeStats={addition:{c:0,t:0},subtraction:{c:0,t:0},num2name:{c:0,t:0},name2num:{c:0,t:0},next:{c:0,t:0},prev:{c:0,t:0},largest:{c:0,t:0},smallest:{c:0,t:0}};
+ 
+function ri(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function sh(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+function wrongNums(c,mx,cnt){ var w=[],offs=sh([-3,-2,-1,1,2,3,-5,5,-10,10]); for(var i=0;i<offs.length&&w.length<cnt;i++){var v=c+offs[i];if(v>=0&&v<=mx&&v!==c&&w.indexOf(v)===-1)w.push(v);} while(w.length<cnt){var v=ri(0,mx);if(v!==c&&w.indexOf(v)===-1)w.push(v);} return w.slice(0,cnt); }
+function wrongNames(cn,mx,cnt){ var w=[]; while(w.length<cnt){var r=ri(0,mx);var nm=numName(r);if(nm!==cn&&w.indexOf(nm)===-1)w.push(nm);} return w.slice(0,cnt); }
+ 
+function genAdd(mx){ var a=ri(1,Math.min(mx-1,Math.floor(mx/2))),b=ri(1,mx-a),c=a+b; return{q:a+" + "+b+" = ?",choices:sh([c,...wrongNums(c,mx,3)].map(String)),correct:String(c),type:"addition",badge:"Нийлбэр",bc:"rgba(212,100,74,.15)",fc:"var(--terra2)"}; }
+function genSub(mx){ var a=ri(2,mx),b=ri(1,a-1),c=a-b; return{q:a+" − "+b+" = ?",choices:sh([c,...wrongNums(c,a,3)].map(String)),correct:String(c),type:"subtraction",badge:"Хасалт",bc:"rgba(91,155,213,.15)",fc:"var(--sky2)"}; }
+function genN2N(mx){ var n=ri(0,mx),nm=numName(n); return{q:n+" — энэ тоо юу вэ?",choices:sh([nm,...wrongNames(nm,mx,3)]),correct:nm,type:"num2name",badge:"Тоо → Нэр",bc:"rgba(232,184,75,.15)",fc:"var(--gold2)"}; }
+function genNm2Num(mx){ var n=ri(1,mx),nm=numName(n); return{q:"«"+nm+"» — хэд вэ?",choices:sh([n,...wrongNums(n,mx,3)].map(String)),correct:String(n),type:"name2num",badge:"Нэр → Тоо",bc:"rgba(94,163,107,.15)",fc:"var(--sage2)"}; }
+function genNext(mx){ var n=ri(0,mx-1),c=n+1; return{q:n+"-ын дараах тоо?",choices:sh([c,...wrongNums(c,mx,3)].map(String)),correct:String(c),type:"next",badge:"Дараах",bc:"rgba(212,100,74,.12)",fc:"var(--terra2)"}; }
+function genPrev(mx){ var n=ri(1,mx),c=n-1; return{q:n+"-ын өмнөх тоо?",choices:sh([c,...wrongNums(c,n,3)].map(String)),correct:String(c),type:"prev",badge:"Өмнөх",bc:"rgba(91,155,213,.12)",fc:"var(--sky2)"}; }
+function genLrg(mx){ var ns=[],cr=ri(Math.floor(mx/2),mx); ns.push(cr); while(ns.length<3){var r=ri(1,mx);if(ns.indexOf(r)===-1)ns.push(r);} cr=Math.max(...ns); return{q:"Хамгийн их тоо юу?\n"+[...ns].sort(function(){return Math.random()-.5}).join(",  "),choices:sh([cr,...ns.filter(function(x){return x!==cr;})].map(String)),correct:String(cr),type:"largest",badge:"Хамгийн их",bc:"rgba(232,184,75,.12)",fc:"var(--gold2)"}; }
+function genSml(mx){ var ns=[],cr=ri(0,Math.floor(mx/2)); ns.push(cr); while(ns.length<3){var r=ri(cr+1,mx);if(ns.indexOf(r)===-1)ns.push(r);} cr=Math.min(...ns); return{q:"Хамгийн бага тоо юу?\n"+[...ns].sort(function(){return Math.random()-.5}).join(",  "),choices:sh([cr,...ns.filter(function(x){return x!==cr;})].map(String)),correct:String(cr),type:"smallest",badge:"Хамгийн бага",bc:"rgba(94,163,107,.12)",fc:"var(--sage2)"}; }
+ 
+function genNQs(mx,cnt){
+  var types=["addition","addition","subtraction","subtraction","num2name","name2num","next","prev","largest","smallest","addition","subtraction","num2name","name2num","next"];
+  var gens={addition:genAdd,subtraction:genSub,num2name:genN2N,name2num:genNm2Num,next:genNext,prev:genPrev,largest:genLrg,smallest:genSml};
+  return sh(types.slice(0,cnt).map(function(t){ return gens[t](mx); }));
+}
+ 
+function showNQPanel(id){
+  ["nqStart","nqPlay","nqResult"].forEach(function(p){ document.getElementById(p).style.display=p===id?"block":"none"; });
+}
+function startNQ(mx){
+  nqLastDiff=mx; nqDiff=mx; nqIdx=0; nqScore=0; nqLocked=false;
+  Object.keys(nqTypeStats).forEach(function(k){ nqTypeStats[k]={c:0,t:0}; });
+  nqQs=genNQs(mx,15); nqStartT=Date.now();
+  showNQPanel("nqPlay"); loadNQ();
+}
+function loadNQ(){
+  if(nqIdx>=nqQs.length){ showNQRes(); return; }
+  nqLocked=false; nqTimeLeft=15;
+  var q=nqQs[nqIdx];
+  document.getElementById("nqBadge").textContent=q.badge;
+  document.getElementById("nqBadge").style.cssText="font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:16px;background:"+q.bc+";color:"+q.fc;
+  document.getElementById("nqText").innerHTML=q.q.replace(/\n/g,"<br>");
+  document.getElementById("nqFb").textContent="";
+  document.getElementById("nqScoreDisp").textContent=nqScore+" / "+nqMax;
+  document.getElementById("nqProgFill").style.width=(nqIdx/nqMax*100)+"%";
+  var cc=document.getElementById("nqChoices"); cc.innerHTML="";
+  q.choices.forEach(function(ch){
+    var b=document.createElement("button"); b.className="nquiz-choice"; b.textContent=ch;
+    b.onclick=function(){ handleNQ(ch,b); }; cc.appendChild(b);
+  });
+  updNQTimer(); startNQTimer();
+}
+function startNQTimer(){
+  clearInterval(nqTimer);
+  nqTimer=setInterval(function(){
+    nqTimeLeft--; updNQTimer();
+    if(nqTimeLeft<=5&&nqTimeLeft>0) playTick();
+    if(nqTimeLeft<=0){ clearInterval(nqTimer); timeoutNQ(); }
+  },1000);
+}
+function updNQTimer(){
+  document.getElementById("nqTimerDisp").textContent=nqTimeLeft;
+  var pct=nqTimeLeft/15, off=94.25*(1-pct);
+  var ring=document.getElementById("nqTimerRing");
+  ring.style.strokeDashoffset=off;
+  ring.style.stroke=nqTimeLeft<=5?"#e74c3c":"var(--terra)";
+  document.getElementById("nqTimerDisp").style.color=nqTimeLeft<=5?"#e74c3c":"var(--terra)";
+}
+function timeoutNQ(){
+  if(nqLocked)return; nqLocked=true;
+  var q=nqQs[nqIdx]; nqTypeStats[q.type].t++;
+  document.querySelectorAll(".nquiz-choice").forEach(function(b){ b.classList.add("disabled"); if(b.textContent===q.correct)b.classList.add("correct-ans"); });
+  document.getElementById("nqFb").innerHTML='<span style="color:var(--terra)"><i class="fas fa-clock" style="margin-right:5px"></i>Хугацаа дууслаа! Зөв: '+q.correct+'</span>';
+  playBuzz(); setTimeout(function(){ nqIdx++; loadNQ(); },1800);
+}
+function handleNQ(chosen,btn){
+  if(nqLocked)return; nqLocked=true; clearInterval(nqTimer);
+  var q=nqQs[nqIdx]; nqTypeStats[q.type].t++;
+  document.querySelectorAll(".nquiz-choice").forEach(function(b){ b.classList.add("disabled"); if(b.textContent===q.correct)b.classList.add("correct-ans"); });
+  if(chosen===q.correct){
+    nqScore++; nqTypeStats[q.type].c++; playDing();
+    document.getElementById("nqFb").innerHTML='<span style="color:var(--sage2)"><i class="fas fa-check-circle" style="margin-right:5px"></i>Зөв!</span>';
+  } else {
+    btn.classList.add("wrong-ans"); playBuzz();
+    document.getElementById("nqFb").innerHTML='<span style="color:var(--terra2)"><i class="fas fa-times-circle" style="margin-right:5px"></i>Буруу! Зөв: '+q.correct+'</span>';
+  }
+  document.getElementById("nqScoreDisp").textContent=nqScore+" / "+nqMax;
+  setTimeout(function(){ nqIdx++; loadNQ(); },1500);
+}
+function nqQuit(){ clearInterval(nqTimer); showNQPanel("nqStart"); }
+function showNQRes(){
+  clearInterval(nqTimer);
+  var el=Math.round((Date.now()-nqStartT)/1000), pct=Math.round(nqScore/nqMax*100);
+  showNQPanel("nqResult");
+  document.getElementById("nresStat1").textContent=nqScore+" / "+nqMax;
+  document.getElementById("nresStat2").textContent=pct+"%";
+  document.getElementById("nresStat3").textContent=el;
+  var icon,title,sub;
+  if(pct>=90){icon='<i class="fas fa-trophy" style="color:var(--gold);font-size:3rem"></i>';title="Маш Сайн!";sub="Тооны мэдлэгтэй гарамгай байна";}
+  else if(pct>=70){icon='<i class="fas fa-medal" style="color:var(--terra2);font-size:3rem"></i>';title="Сайн!";sub="Гайхалтай үзүүлэлт байна";}
+  else if(pct>=50){icon='<i class="fas fa-thumbs-up" style="color:var(--sky2);font-size:3rem"></i>';title="Дунд";sub="Дахин practice хийвэл сайжирна";}
+  else{icon='<i class="fas fa-book-open" style="color:var(--fg2);font-size:3rem"></i>';title="Дахин Сурья";sub="Тоо сурах хэсэг рүү очоорой";}
+  document.getElementById("nresIcon").innerHTML=icon;
+  document.getElementById("nresTitle").textContent=title;
+  document.getElementById("nresSub").textContent=sub;
+  var tlabs={addition:"Нийлбэр",subtraction:"Хасалт",num2name:"Тоо→Нэр",name2num:"Нэр→Тоо",next:"Дараах",prev:"Өмнөх",largest:"Хамгийн их",smallest:"Хамгийн бага"};
+  var ticons={addition:"fa-plus",subtraction:"fa-minus",num2name:"fa-hashtag",name2num:"fa-font",next:"fa-arrow-right",prev:"fa-arrow-left",largest:"fa-arrow-up",smallest:"fa-arrow-down"};
+  var bd=document.getElementById("nresBD"); bd.innerHTML="";
+  Object.keys(nqTypeStats).forEach(function(k){
+    var s=nqTypeStats[k]; if(s.t===0)return;
+    var sp=Math.round(s.c/s.t*100);
+    var col=sp>=70?"var(--sage)":sp>=50?"var(--gold)":"var(--terra)";
+    bd.innerHTML+='<div class="nbd-row"><i class="fas '+ticons[k]+'" style="color:var(--fg2);width:14px;font-size:.72rem;text-align:center"></i><span class="nbd-label">'+tlabs[k]+'</span><div class="nbd-track"><div class="nbd-fill" style="width:'+sp+'%;background:'+col+'"></div></div><span class="nbd-pct">'+s.c+"/"+s.t+'</span></div>';
+  });
+  document.getElementById("nqRetryBtn").onclick=function(){ startNQ(nqLastDiff); };
+  if(pct>=70){ createConfetti(); setTimeout(playSuccess,300); }
+}
+ 
+/* ═══════════════════════════════════════════
+   MODULE 3: АМЬТАД — DATA
+═══════════════════════════════════════════ */
+var animalData=[
+  // 0: Ойн амьтад
+  [
+    {name:"Хэрэм",altName:"Siberian chipmunk",desc:"Модон дээр амьдардаг, самар иддэг хөөрхөн жижиг мэрэгч. Урт сүүлээрээ тэнцвэрээ хадгалан модонд хурдан өрөвдөж, өвлийн идэш хоолоо нүхэндээ хадгалдаг.",tags:["Мэрэгч","Ой","Самартан"],rare:false,habitat:"Хөвч ой",diet:"Самар, үрс, жимс",size:"15-20 см",img:"https://picsum.photos/seed/chipmunk-mn/400/300"},
+    {name:"Булга",altName:"Sable",desc:"Үслэг, уян налархай биетэй амьтан. Маш үнэтэй арьстай бөгөөд хүйтний улиралд ноос нь нягт болдог. Шөнийн амьдралтай.",tags:["Үслэг","Ховор","Тайга"],rare:true,habitat:"Шинэсэн тайга",diet:"Мэрэгч, жимс, шувуу",size:"35-50 см",img:"https://picsum.photos/seed/sable-mn/400/300"},
+    {name:"Хүрэн баавгай",altName:"Brown bear",desc:"Хангайн хөвч тайгаар нутагладаг том биетэй араатан. Өвлийн унтахаасаа өмнө их хэмжээний тос цуглуулан бэлтгэдэг.",tags:["Том биет","Тайга","Өвлийн унтлага"],rare:false,habitat:"Хангайн тайга",diet:"Жимс, загас, мэрэгч",size:"150-250 см",img:"https://picsum.photos/seed/brownbear-mn/400/300"},
+    {name:"Буга",altName:"Maral / Red deer",desc:"Сүрлэг сайхан эвэртэй том амьтан. Эрэгчин нь том өргөстэй ба жил бүр шинэ эвэр ургуулдаг. Монголын ойн хамгийн үзэсгэлэнтэй амьтны нэг.",tags:["Ихэртэн","Сүрлэг","Ой"],rare:false,habitat:"Хөвч ой",diet:"Навч, үрс, өвс",size:"150-250 см",img:"https://picsum.photos/seed/maral-deer/400/300"},
+    {name:"Бодон гахай",altName:"Wild boar",desc:"Зэрлэг гахай бөгөөд биеэр том, хүчтэй. Хамар нь хатуу бөгөөд газар малтан үрс, үндэс, шавьж хайж иддэг.",tags:["Зэрлэг","Хүчтэй","Ойн"],rare:false,habitat:"Ой, хөвч",diet:"Үндэс, үрс, шавьж",size:"90-180 см",img:"https://picsum.photos/seed/wildboar-mn/400/300"},
+    {name:"Гөрөөс",altName:"Roe deer",desc:"Нарийн хөлтэй, хурдан шаламгай жижиг антилоп. Ойн зах, хээрийн ойгоор амьдардаг.",tags:["Ихэртэн","Хурдан","Жижиг"],rare:false,habitat:"Ойн зах",diet:"Навч, үрс, өвс",size:"60-75 см",img:"https://picsum.photos/seed/roedeer-mn/400/300"},
+  ],
+  // 1: Говь, Хээр
+  [
+    {name:"Мазаалай",altName:"Gobi bear",desc:"Зөвхөн Монголын говьд байдаг, дэлхийд маш ховордсон баавгай. Одоогоор 50-аас доош тоо толгой бий. Говийн баянбайрлагийн худгуудын орчмоор амьдардаг.",tags:["Нэн ховор","Эндемик","Говь"],rare:true,habitat:"Говь цөл",diet:"Үрс, үндэс",size:"150-200 см",img:"https://picsum.photos/seed/gobibear-mn/400/300"},
+    {name:"Хавтгай",altName:"Wild Bactrian camel",desc:"Зэрлэг хоёр бөгтөй тэмээ. Говийн цөлд усгүй байх үедээ хадгалж чаддаг. Дэлхийд маш цөөхөн тоотой.",tags:["Нэн ховор","Зэрлэг","Цөл"],rare:true,habitat:"Говь цөл",diet:"Цөллийн ургамал",size:"200-350 см",img:"https://picsum.photos/seed/wildcamel-mn/400/300"},
+    {name:"Хулан",altName:"Mongolian wild ass",desc:"Зэрлэг илжиг бөгөөд говь, хээр талд сүрэглэн амьдардаг. Маш хурдан гүйдэг.",tags:["Ховор","Хурдан","Тал"],rare:true,habitat:"Говь, хээр",diet:"Өвс, ургамал",size:"200-250 см",img:"https://picsum.photos/seed/khulan-mn/400/300"},
+    {name:"Цагаан зээр",altName:"Mongolian gazelle",desc:"Тал нутгаар мянга мянгаараа сүрэглэн давхидаг. Монголын хээрийн тэмдэг амьтан бөгөөд жил бүр мянга км нүүдэл хийдэг.",tags:["Нүүдэлчин","Сүрэг","Тал"],rare:false,habitat:"Хээр тал",diet:"Өвс, ургамал",size:"100-130 см",img:"https://picsum.photos/seed/whitegazelle/400/300"},
+    {name:"Тарвага",altName:"Marmot",desc:"Нүхэнд амьдардаг, хээрийн том мэрэгч амьтан. Өвлийн унтахаар 6-7 сар орно.",tags:["Мэрэгч","Нүхэн","Тал"],rare:false,habitat:"Хээр тал",diet:"Өвс, ургамал",size:"35-55 см",img:"https://picsum.photos/seed/marmot-mn/400/300"},
+    {name:"Хар сүүлт",altName:"Black-tailed gazelle",desc:"Говийн үзэсгэлэнт зээр бөгөөд сүүл нь хар өнгөтэй. Жижиг боловч маш хурдан.",tags:["Говь","Хурдан"],rare:false,habitat:"Говь, хэвтгий тал",diet:"Бутлаг, өвс",size:"85-110 см",img:"https://picsum.photos/seed/blacktail-gazelle/400/300"},
+  ],
+  // 2: Өндөр уул
+  [
+    {name:"Ирвэс",altName:"Snow leopard",desc:"Дэлхийн дээвэр гэгдэх өндөр хад асгаар амьдардаг. Цоохор арьстай, урт сүүлтэй бөгөөд маш зайлагч. Монголд ойролцоогоор 1000 бий.",tags:["Нэн ховор","Махчин","Уул"],rare:true,habitat:"Өндөр уул, хад",diet:"Янгир, аргаль, үен",size:"100-130 см",img:"https://picsum.photos/seed/snowleopard-mn/400/300"},
+    {name:"Янгир",altName:"Siberian ibex",desc:"Мурилсан том эвэртэй зэрлэг ямаа. Өндөр уулын хад асгаар авирдаг. Эрэгчин нь 100 кг хүртэл жинтэй.",tags:["Ихэртэн","Уул","Авирлагч"],rare:false,habitat:"Өндөр уул",diet:"Уулын ургамал",size:"120-160 см",img:"https://picsum.photos/seed/ibex-mn/400/300"},
+    {name:"Аргаль",altName:"Argali sheep",desc:"Угалзсан том эвэртэй зэрлэг хонь. Дэлхийн хамгийн том ихэртэнүүдийн нэг бөгөөд эвэр нь 1.5 метр хүртэл ургадаг.",tags:["Ихэртэн","Том эвэр","Уул"],rare:true,habitat:"Өндөр уул",diet:"Өвс, ургамал",size:"120-160 см",img:"https://picsum.photos/seed/argali-mn/400/300"},
+    {name:"Манул",altName:"Pallas's cat",desc:"Сүүдэр шиг зүстэй, маш сонирхолтой зэрлэг муур. Монголын уул хээрт тархалттай бөгөөд биеэр жижиг, сүүл нь урт.",tags:["Зэрлэг муур","Уул"],rare:false,habitat:"Уул, хээр",diet:"Мэрэгч, шавьж",size:"50-65 см",img:"https://picsum.photos/seed/manul-cat/400/300"},
+    {name:"Үен",altName:"Steppe polecat",desc:"Нарийн биетэй, хурдан хөдлөгөөнтэй жижиг амьтан. Нүдний орчим хар сэрвэтэй, маш зальтай.",tags:["Жижиг махчин","Уул"],rare:false,habitat:"Өндөр уул, хээр",diet:"Зурам, тарвага",size:"35-50 см",img:"https://picsum.photos/seed/polecat-mn/400/300"},
+  ],
+  // 3: Araatan
+  [
+    {name:"Чоно",altName:"Gray wolf",desc:"Хээр тал, ууланд амьдардаг зэрлэг нохой. Бүлээрээ агналдаг. Монголын түүх соёлд тусгай байр суурьтай.",tags:["Бүлэг","Махчин","Тал"],rare:false,habitat:"Хээр, ой, уул",diet:"Цагаан зээр, тарвага",size:"100-160 см",img:"https://picsum.photos/seed/graywolf-mn/400/300"},
+    {name:"Үнэг",altName:"Red fox",desc:"Шаргал зүстэй, ухаалаг амьтан. Ой, хээр, хот хүртэл бүх нутагт тааралддаг.",tags:["Ухаалаг","Түгээмэл"],rare:false,habitat:"Ой, хээр",diet:"Мэрэгч, жимс",size:"60-90 см",img:"https://picsum.photos/seed/redfox-mn/400/300"},
+    {name:"Хярс",altName:"Corsac fox",desc:"Үнэгнээс арай жижиг биетэй, цайвар шаргал зүстэй. Говь, хээр талд амьдрах.",tags:["Жижиг","Говь"],rare:false,habitat:"Говь, хээр",diet:"Мэрэгч, шавьж",size:"45-65 см",img:"https://picsum.photos/seed/corsac-mn/400/300"},
+    {name:"Шивүүрт зараа",altName:"Manchurian hedgehog",desc:"Нуруундаа олон өргөстэй жижиг амьтан. Аюул учрахад бөөрөнхий болон эвхэгдэж өргөсөөрөө хамгаалагддаг.",tags:["Өргөст","Жижиг"],rare:false,habitat:"Ой, бутлаг",diet:"Шавьж, өт",size:"15-30 см",img:"https://picsum.photos/seed/hedgehog-mn/400/300"},
+    {name:"Бор туулай",altName:"Mongolian hare",desc:"Хурдан гүйлттэй, урт чихтэй. Зуны үед бор, өвлийн үдээр цайвар өнгөтэй болдог.",tags:["Хурдан","Чихт","Түгээмэл"],rare:false,habitat:"Хээр, ойн зах",diet:"Өвс, навч",size:"40-55 см",img:"https://picsum.photos/seed/hare-mn/400/300"},
+  ]
+];
+var waterBirds=[
+  {name:"Тул",altName:"Taimen fish",desc:"Монголын гол мөрний хаан загас. 1.5 метр хүртэл ургадаг, дэлхийн хамгийн том усны махчин загаснуудын нэг.",tags:["Загас","Том","Ховор"],rare:true,habitat:"Гол мөрөн",diet:"Бусад загас",size:"100-150 см",img:"https://picsum.photos/seed/taimen-fish/400/300"},
+  {name:"Бүргэд",altName:"Golden eagle",desc:"Харц хурц, тэнгэрийн хүчит шувуу. Монголын угсаатны соёлд тусгай байр эзэлдэг. Бүргэд цайлгах уламжлал Монголд мөрдөгддөг.",tags:["Махчин шувуу","Хүчит","Соёл"],rare:false,habitat:"Уул, хээр",diet:"Мэрэгч, жижиг амьтад",size:"Далавч 2-2.3м",img:"https://picsum.photos/seed/goldeneagle-mn/400/300"},
+  {name:"Хонгор галуу",altName:"Whooper swan",desc:"Нуур усанд суудаг нүүдлийн шувуу. Цагаан нарийхан хоолой, ул нь хар. Жиргээний дуу нь алдартай.",tags:["Нүүдлийн","Шувуу","Нуур"],rare:false,habitat:"Нуур, голын хөвөө",diet:"Усны ургамал",size:"140-160 см",img:"https://picsum.photos/seed/whoperswan-mn/400/300"},
+  {name:"Тас",altName:"Bearded vulture",desc:"Хамгийн том далавчтай өндөр уулын махчин шувуу. Далавчны хэмжээ 3 метр хүрнэ. Ясаар хооллодог.",tags:["Том далавч","Уул","Ховор"],rare:true,habitat:"Өндөр уул",diet:"Яс, үхэл",size:"Далавч 2.5-3м",img:"https://picsum.photos/seed/lammergeier-mn/400/300"},
+  {name:"Хөхтөн",altName:"Mongolian lark",desc:"Хээрийн жижиг дуулдаг шувуу. Агаарт хөвж дуулдаг нь монголчуудад их таатай.",tags:["Дуулдаг","Жижиг","Хээр"],rare:false,habitat:"Хээр тал",diet:"Шавьж, үрс",size:"15-20 см",img:"https://picsum.photos/seed/mongolark-mn/400/300"},
+];
+ 
+var animPageInfos=[
+  {title:"Ойн амьтад",sub:"Модон хөвч, нүүдэлчдийн байгаль"},
+  {title:"Говь ба хээрийн амьтад",sub:"Цөлийн болон тал нутгийн тэнгэр ширүүн байгаль"},
+  {title:"Өндөр уулын амьтад",sub:"Дэлхийн дээвэрт амьдрагчид"},
+  {title:"Хөхтөн, Ураатан",sub:"Түгээмэл тархалттай байгалийн гүнзгий зэвсэг"},
+  {title:"Шувуу, Усны амьтад · Мэдлэгийн Шалгалт",sub:"Тэнгэрийн болон усны амьтад — Мэдлэгээ шалгах цаг"}
+];
+var currentAnimPage=0, animTotal=5;
+ 
+function buildAnimPageDots(){
+  var el=document.getElementById("animPageDots"); el.innerHTML="";
+  for(var i=0;i<animTotal;i++){
+    (function(idx){
+      var b=document.createElement("button"); b.className="apd-btn"+(idx===currentAnimPage?" active":"");
+      b.innerHTML='<span>'+(idx<4?idx+1:'<i class="fas fa-brain" style="font-size:.65rem"></i>')+'</span>';
+      b.onclick=function(){ animGoTo(idx); };
+      el.appendChild(b);
+    })(i);
+  }
+}
+function animGoTo(page){
+  if(page<0||page>=animTotal)return;
+  currentAnimPage=page;
+  document.querySelectorAll(".anim-page").forEach(function(p,i){ p.classList.toggle("active",i===page); });
+  document.querySelectorAll(".apd-btn").forEach(function(b,i){ b.classList.toggle("active",i===page); });
+  document.getElementById("animSecTitle").textContent=animPageInfos[page].title;
+  document.getElementById("animSecSub").textContent=animPageInfos[page].sub;
+  document.getElementById("anavCurr").textContent=page+1;
+  if(page===4&&!aqStarted) startAQ();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.getElementById("anavPrev").onclick=function(){ animGoTo(currentAnimPage-1); };
+document.getElementById("anavNext").onclick=function(){ animGoTo(currentAnimPage+1); };
+ 
+function populateAnimGrids(){
+  for(var i=0;i<4;i++){
+    var g=document.getElementById("agrid"+i); g.innerHTML="";
+    animalData[i].forEach(function(a){ g.appendChild(makeACard(a)); });
+  }
+}
+function makeACard(a){
+  var c=document.createElement("div"); c.className="acard";
+  c.innerHTML='<div class="acard-img-wrap">'+(a.rare?'<div class="acard-rare"><i class="fas fa-shield-halved" style="margin-right:3px"></i>Ховор</div>':'')+'<img class="acard-img" src="'+a.img+'" alt="'+a.name+'" loading="lazy"></div><div class="acard-body"><div class="acard-name">'+a.name+'</div><div class="acard-alt">'+a.altName+'</div><div class="acard-desc">'+(a.desc.length>80?a.desc.slice(0,80)+"...":a.desc)+'</div></div><div class="acard-footer">'+a.tags.map(function(t){ return '<span class="acard-tag">'+t+'</span>'; }).join("")+'</div><i class="fas fa-arrow-up-right-from-square acard-arrow"></i>';
+  c.onclick=function(){ openAMod(a); };
+  return c;
+}
+ 
+/* Animal modal */
+function openAMod(a){
+  document.getElementById("amodImg").src=a.img;
+  document.getElementById("amodName").textContent=a.name;
+  document.getElementById("amodAlt").textContent=a.altName;
+  document.getElementById("amodDesc").textContent=a.desc;
+  var sc=a.rare?"var(--terra2)":"var(--sage2)", st=a.rare?"Ховордсон":"Түгээмэл";
+  document.getElementById("amodFacts").innerHTML=
+    '<div class="amod-fact"><div class="amod-fact-lbl">Нутаглал</div><div class="amod-fact-val">'+a.habitat+'</div></div>'+
+    '<div class="amod-fact"><div class="amod-fact-lbl">Хоол тэжээл</div><div class="amod-fact-val">'+a.diet+'</div></div>'+
+    '<div class="amod-fact"><div class="amod-fact-lbl">Хэмжээ</div><div class="amod-fact-val">'+a.size+'</div></div>'+
+    '<div class="amod-fact"><div class="amod-fact-lbl">Статус</div><div class="amod-fact-val" style="color:'+sc+'">'+st+'</div></div>';
+  document.getElementById("amodOverlay").classList.add("show");
+  document.body.style.overflow="hidden";
+}
+function closeAMod(){ document.getElementById("amodOverlay").classList.remove("show"); document.body.style.overflow=""; }
+document.getElementById("amodClose").onclick=closeAMod;
+document.getElementById("amodOverlay").onclick=function(e){ if(e.target===this)closeAMod(); };
+ 
+/* Animal Quiz */
+var aqStarted=false,aqQs=[],aqIdx=0,aqCorrect=0,aqWrong=0,AQ_COUNT=10;
+function allAnimals(){ return animalData[0].concat(animalData[1],animalData[2],animalData[3],waterBirds); }
+function startAQ(){
+  aqStarted=true; aqIdx=0; aqCorrect=0; aqWrong=0;
+  document.getElementById("aquizBody").style.display="block";
+  document.getElementById("aquizResult").classList.remove("show");
+  var all=sh([...allAnimals()]);
+  aqQs=all.slice(0,Math.min(AQ_COUNT,all.length)).map(function(a){
+    var others=sh(all.filter(function(x){ return x.name!==a.name; })).slice(0,3);
+    return { img:a.img, hint:a.altName, correct:a.name, opts:sh([a,...others].map(function(x){ return x.name; })) };
+  });
+  updAQScore(); showAQQ();
+}
+function updAQScore(){
+  document.getElementById("aqC").textContent=aqCorrect;
+  document.getElementById("aqW").textContent=aqWrong;
+  document.getElementById("aqR").textContent=AQ_COUNT-aqIdx;
+  document.getElementById("aqProg").style.width=(aqIdx/AQ_COUNT*100)+"%";
+}
+function showAQQ(){
+  if(aqIdx>=aqQs.length){ showAQRes(); return; }
+  var q=aqQs[aqIdx];
+  document.getElementById("aqHint").textContent=q.hint;
+  document.getElementById("aqImg").src=q.img;
+  document.getElementById("aqFb").textContent=""; document.getElementById("aqFb").className="aquiz-fb";
+  document.getElementById("aqNext").classList.remove("show");
+  var oc=document.getElementById("aqOpts"); oc.innerHTML="";
+  q.opts.forEach(function(nm){
+    var b=document.createElement("button"); b.className="aquiz-opt"; b.textContent=nm;
+    b.onclick=function(){ handleAQ(nm,q.correct,b); }; oc.appendChild(b);
+  });
+}
+function handleAQ(sel,cor,btn){
+  document.querySelectorAll(".aquiz-opt").forEach(function(b){ b.classList.add("disabled"); if(b.textContent===cor)b.classList.add("correct"); });
+  if(sel===cor){
+    aqCorrect++; playDing();
+    document.getElementById("aqFb").textContent="Зөв! Баяр хүргэе! ✓"; document.getElementById("aqFb").className="aquiz-fb cor";
+  } else {
+    btn.classList.add("wrong"); aqWrong++; playBuzz();
+    document.getElementById("aqFb").textContent="Буруу! Зөв: "+cor; document.getElementById("aqFb").className="aquiz-fb wrn";
+  }
+  aqIdx++; updAQScore(); document.getElementById("aqNext").classList.add("show");
+}
+document.getElementById("aqNext").onclick=showAQQ;
+function showAQRes(){
+  document.getElementById("aquizBody").style.display="none";
+  document.getElementById("aquizResult").classList.add("show");
+  var pct=Math.round(aqCorrect/AQ_COUNT*100);
+  var icon,title,sub;
+  if(pct>=90){icon='<i class="fas fa-trophy" style="color:var(--gold)"></i>';title="Байгальч!";sub="Монголын амьтдыг гарамгай мэднэ";}
+  else if(pct>=70){icon='<i class="fas fa-star" style="color:var(--gold)"></i>';title="Сайн!";sub="Гайхалтай үзүүлэлт";}
+  else if(pct>=50){icon='<i class="fas fa-seedling" style="color:var(--sage2)"></i>';title="Дундаж";sub="Дахин суралцаарай";}
+  else{icon='<i class="fas fa-book-open" style="color:var(--fg2)"></i>';title="Дахин сурья";sub="Амьтдын хэсэг рүү буцаарай";}
+  document.getElementById("aqResIcon").innerHTML=icon;
+  document.getElementById("aqResTitle").textContent=title;
+  document.getElementById("aqResSub").textContent=AQ_COUNT+" асуултаас "+aqCorrect+" зөв — "+pct+"%";
+  if(pct>=70){ createConfetti(); setTimeout(playSuccess,300); }
+}
+document.getElementById("aqRestart").onclick=function(){ aqStarted=false; startAQ(); };
+ 
+/* Keyboard nav */
+document.addEventListener("keydown",function(e){
+  if(document.getElementById("amodOverlay").classList.contains("show")&&e.key==="Escape"){ closeAMod(); return; }
+  if(document.getElementById("modAnimals").classList.contains("active")){
+    if(e.key==="ArrowLeft") animGoTo(currentAnimPage-1);
+    if(e.key==="ArrowRight") animGoTo(currentAnimPage+1);
+  }
+});
+/* Touch swipe for animals */
+var tsx=0;
+document.addEventListener("touchstart",function(e){ tsx=e.changedTouches[0].screenX; },{passive:true});
+document.addEventListener("touchend",function(e){
+  if(!document.getElementById("modAnimals").classList.contains("active"))return;
+  var dx=tsx-e.changedTouches[0].screenX;
+  if(Math.abs(dx)>55){ if(dx>0)animGoTo(currentAnimPage+1); else animGoTo(currentAnimPage-1); }
+},{passive:true});
+ 
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+renderLetters();
+renderNumGrid("grid0",numGroups[0]);
+renderNumGrid("grid1",numGroups[1]);
+renderNumGrid("grid2",numGroups[2]);
+renderNL();
+startCountRound();
+populateAnimGrids();
+buildAnimPageDots();
+ 
+var total=animalData[0].length+animalData[1].length+animalData[2].length+animalData[3].length+waterBirds.length;
+setTimeout(function(){ showToast("Нийт "+total+" амьтны мэдээлэл · "+letters.length+" үсэг · 0–100 тоо ачааллав ✓"); },800);
+</script>
+</body>
+</html>
